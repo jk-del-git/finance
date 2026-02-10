@@ -526,10 +526,21 @@ public class SupplierBillService {
         BigDecimal soFarAppropriated;
         BigDecimal actualAmount;
 
+		/*
+		 * if (egBillregister.getEgBillregistermis().getVoucherHeader() != null) {
+		 * budgetDataMap.put(Constants.ASONDATE,
+		 * egBillregister.getEgBillregistermis().getVoucherHeader().getVoucherDate()); }
+		 * else { budgetDataMap.put(Constants.ASONDATE, egBillregister.getBilldate()); }
+		 */
         if (egBillregister.getEgBillregistermis().getVoucherHeader() != null) {
-            budgetDataMap.put(Constants.ASONDATE, egBillregister.getEgBillregistermis().getVoucherHeader().getVoucherDate());
+            budgetDataMap.put(Constants.FROMDATE,
+                    egBillregister.getEgBillregistermis().getFinancialyear().getStartingDate());
+            budgetDataMap.put(Constants.TODATE,
+                    egBillregister.getEgBillregistermis().getVoucherHeader().getVoucherDate());
         } else {
-            budgetDataMap.put(Constants.ASONDATE, egBillregister.getBilldate());
+            budgetDataMap.put(Constants.FROMDATE,
+                    egBillregister.getEgBillregistermis().getFinancialyear().getStartingDate());
+            budgetDataMap.put(Constants.TODATE, egBillregister.getBilldate());
         }
         CFinancialYear financialYearById = egBillregister.getEgBillregistermis().getFinancialyear();
 
@@ -552,7 +563,10 @@ public class SupplierBillService {
         BigDecimal actualAmtFromVoucher = budgetDetailsHibernateDAO.getActualBudgetUtilizedForBudgetaryCheck(budgetDataMap);
         if (LOG.isDebugEnabled())
             LOG.debug("actualAmtFromVoucher .............................. " + actualAmtFromVoucher);
-        budgetDataMap.put(Constants.ASONDATE, egBillregister.getBilldate());
+//        budgetDataMap.put(Constants.ASONDATE, egBillregister.getBilldate());
+        budgetDataMap.put(Constants.FROMDATE,
+                egBillregister.getEgBillregistermis().getFinancialyear().getStartingDate());
+        budgetDataMap.put(Constants.TODATE, egBillregister.getBilldate());
         BigDecimal actualAmtFromBill = budgetDetailsHibernateDAO.getBillAmountForBudgetCheck(budgetDataMap);
         if (LOG.isDebugEnabled())
             LOG.debug("actualAmtFromBill .............................. " + actualAmtFromBill);
